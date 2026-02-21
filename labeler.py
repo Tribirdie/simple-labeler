@@ -12,11 +12,11 @@ from tkinter import scrolledtext
 import cv2
 
 ext_allowed = [".png", ".jpg"]
-file_entries = " "
+file_entries = [] # will hold all the file paths
 
-amount_of_entries = 0
-current_file = 0
-points = []
+amount_of_entries = 0 
+current_file_index = 0 # tracks current file being operated on
+points = [] # holds the clicked that a rectangle will be drawn over
 
 file_being_read = -1 # cv2 matrix
 backup_file_cpy = -1
@@ -26,7 +26,9 @@ def file_ext_allowed(file_str, ext_list):
         if file_str.endswith(ext):
             return True
         else:
-            return False
+            continue
+
+    return False
 
 def get_files_in_dir(directory):
     dir_list = ""
@@ -58,26 +60,28 @@ def draw_square():
     global file_entries
     global file_being_read
     global backup_file_cpy
-    file_being_read = cv2.imread(file_entries[current_file])
-    backup_file_cpy = cv2.imread(file_entries[current_file])
+    file_being_read = cv2.imread(file_entries[current_file_index])
+    backup_file_cpy = cv2.imread(file_entries[current_file_index])
 
-    cv2.namedWindow(file_entries[current_file], cv2.WINDOW_NORMAL)
-    cv2.imshow(file_entries[current_file], file_being_read)
+    cv2.namedWindow(file_entries[current_file_index], cv2.WINDOW_NORMAL)
+    cv2.imshow(file_entries[current_file_index], file_being_read)
 
-    cv2.setMouseCallback(file_entries[current_file], mouse_event)
+    cv2.setMouseCallback(file_entries[current_file_index], mouse_event)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
     cv2.rectangle(file_being_read, points[0], points[1], (0,0,255), 3)
 
 def approve():
-    cv2.imwrite(file_entries[current_file], file_being_read)
+    cv2.imwrite(file_entries[current_file_index], file_being_read)
 
 def reject():
+    global file_being_read
     file_being_read = backup_file_cpy
 
 def preview():
-    cv2.imshow(file_entries[current_file], file_being_read)
+    cv2.namedWindow(file_entries[current_file_index], cv2.WINDOW_NORMAL)
+    cv2.imshow(file_entries[current_file_index], file_being_read)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -101,23 +105,24 @@ def main():
 
         directory.set(files_n_dir)
         curr_file_name.set(file_entries[0])
+
         scroll_text.delete('1.0', tkinter.END)
         scroll_text.insert(tkinter.INSERT, directory.get());
         
     def lower_pos():
-        global current_file
-        if current_file != 0:
-            current_file -= 1
-            curr_file_name.set(file_entries[current_file])
-            print(current_file)
+        global current_file_index
+        if current_file_index != 0:
+            current_file_index -= 1
+            curr_file_name.set(file_entries[current_file_index])
+            print(current_file_index)
             
     def incr_pos():
-        global current_file
+        global current_file_index
         print("his is me", amount_of_entries)
-        if current_file != amount_of_entries-1:
-            current_file += 1
-            curr_file_name.set(file_entries[current_file])
-            print(current_file)
+        if current_file_index != amount_of_entries-1:
+            current_file_index += 1
+            curr_file_name.set(file_entries[current_file_index])
+            print(current_file_index)
 
     scroll_text = scrolledtext.ScrolledText(gui, wrap='none')
     scroll_text.place(width=150, height=300, x=10, y=10)
