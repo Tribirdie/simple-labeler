@@ -119,7 +119,6 @@ def main():
             
     def incr_pos():
         global current_file_index
-        print("his is me", amount_of_entries)
         if current_file_index != amount_of_entries-1:
             current_file_index += 1
             curr_file_name.set(file_entries[current_file_index])
