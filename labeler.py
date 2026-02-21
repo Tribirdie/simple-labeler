@@ -1,5 +1,6 @@
 '''GUI for the FileVisual program.'''
 
+
 import threading
 import os
 from pathlib import Path
@@ -16,7 +17,9 @@ file_entries = " "
 amount_of_entries = 0
 current_file = 0
 points = []
-file_being_read = 0
+
+file_being_read = -1 # cv2 matrix
+backup_file_cpy = -1
 
 def file_ext_allowed(file_str, ext_list):
     for ext in ext_list:
@@ -54,7 +57,10 @@ def mouse_event(event, x,y, flags, param):
 def draw_square():
     global file_entries
     global file_being_read
+    global backup_file_cpy
     file_being_read = cv2.imread(file_entries[current_file])
+    backup_file_cpy = cv2.imread(file_entries[current_file])
+
     cv2.namedWindow(file_entries[current_file], cv2.WINDOW_NORMAL)
     cv2.imshow(file_entries[current_file], file_being_read)
 
@@ -63,6 +69,17 @@ def draw_square():
     cv2.destroyAllWindows()
 
     cv2.rectangle(file_being_read, points[0], points[1], (0,0,255), 3)
+
+def approve():
+    cv2.imwrite(file_entries[current_file], file_being_read)
+
+def reject():
+    file_being_read = backup_file_cpy
+
+def preview():
+    cv2.imshow(file_entries[current_file], file_being_read)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def main():
     gui = tkinter.Tk()
@@ -107,6 +124,10 @@ def main():
 
     tkinter.Label(gui, textvariable=current_file_label).place(x=170, y=10)
     tkinter.Entry(gui, textvariable=curr_file_name).place(width=400, x=280, y=10)
+    tkinter.Button(gui, text="Preview", command=preview).place(width=200, x=280, y=35)
+    tkinter.Button(gui, text="Approve", command=approve).place(width=100, x=480, y=35)
+    tkinter.Button(gui, text="Reject", command=reject).place(width=100, x=580, y=35)
+
     ttk.Separator(gui, orient="horizontal").place(height=1, width=710, x=0, y=320)
     ttk.Button(gui, text="Directory", command=choose_file).place(height=150, x=10, y=330)
     ttk.Button(gui, text="Draw", command=draw_square).place(height=150, width=300, x=100, y=330)
