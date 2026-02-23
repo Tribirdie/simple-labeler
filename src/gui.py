@@ -3,7 +3,6 @@ from tkinter import filedialog
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import scrolledtext
-from widget_funcs import WidgetFunctions
 
 class GUI:
     def __init__(self):
@@ -40,7 +39,3 @@ class GUI:
         ttk.Button(self.gui, text="Down", command=funcs.incr_pos).place(height=70, width=275, x=405, y=410)
 
         self.gui.mainloop()
-
-m = GUI()
-s = WidgetFunctions(m)
-m.main(s)

@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import cv2
 import tkinter
+from .utility_funcs import get_files_in_dir
 
 class WidgetFunctions:
     '''Central point for all the functions used in the gui'''
@@ -18,37 +19,6 @@ class WidgetFunctions:
         self.points = [] # holds the clicked that a rectangle will be drawn over
         self.file_being_read = -1 # cv2 matrix
         self.backup_file_cpy = -1
-
-    def file_ext_allowed(self, file_str, ext_list):
-        '''Checks if file in directory is supported filetype'''
-        for ext in ext_list:
-            if file_str.endswith(ext):
-                return True
-            continue
-
-        return False
-
-    def get_files_in_dir(self, directory):
-        dir_list = ""
-        full_file_paths = []
-        
-        for d in os.listdir(directory):
-            filename = Path(d).name
-            
-            if not self.file_ext_allowed(filename, self.ext_allowed):
-                continue
-            
-            full_file_directory = os.path.join(directory, d)
-
-            self.file_label_statuses[full_file_directory] = "False"
-            full_file_paths.append(full_file_directory)
-            dir_list += filename
-            dir_list += "\n"
-
-        self.file_entries = full_file_paths
-        amount_of_entries = len(full_file_paths)
- 
-        return dir_list
     
     def mouse_event(self, event, x,y, flags, param):
         '''checks for LMB click'''
@@ -77,7 +47,8 @@ class WidgetFunctions:
 
     def choose_file(self):
         directory_chosen = tkinter.filedialog.askdirectory()
-        files_n_dir = self.get_files_in_dir(directory_chosen)
+        files_n_dir, self.file_entries = get_files_in_dir(directory_chosen, self.ext_allowed, self.file_label_statuses)
+        self.amount_of_entries = len(self.file_entries)
 
         self.GUI.directory.set(files_n_dir)
         self.GUI.curr_file_name.set(self.file_entries[0])
