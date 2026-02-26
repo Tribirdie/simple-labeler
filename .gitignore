@@ -1,1 +1,3 @@
-output/
+label_statuses/
+__pycache__
+*.sw[a-p]
