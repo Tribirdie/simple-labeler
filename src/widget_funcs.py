@@ -100,15 +100,13 @@ class WidgetFunctions:
         '''Decides if the drawn changes will be applied'''
         cv2.imwrite(self.file_entries[self.current_file_index], self.file_being_read)
         # update file status to indicate it has been drawn over
-        self.file_label_statuses[self.file_entries[self.current_file_index]] = "True"
         self.GUI.file_label_status.set(self.file_label_statuses[self.file_entries[self.current_file_index]])
         dump_dict_to_json(self.json_file, self.file_label_statuses)
 
     def reject(self):
         '''Rejects the applied changes and falls back to a backup copy'''
-        self.file_being_read = self.backup_file_cpy
+        self.file_being_read = self.backup_file_cpy 
+        self.file_label_statuses[self.file_entries[self.current_file_index]] = "False"
 
-        
-        set_label = self.file_label_statuses[self.file_entries[self.current_file_index]] = "False"
-
+        set_label = self.file_label_statuses[self.file_entries[self.current_file_index]]
         self.GUI.file_label_status.set(set_label)
