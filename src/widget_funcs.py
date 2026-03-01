@@ -2,7 +2,6 @@ from pathlib import Path
 from pathlib import PurePath
 import os
 import tkinter
-from copy import deepcopy
 import json
 import cv2
 from .utility_funcs import get_files_in_dir, make_json, dump_dict_to_json, load_json_if_exists
@@ -41,7 +40,6 @@ class WidgetFunctions:
 
         read_file = cv2.imread(self.file_entries[self.current_file_index])
         self.backup_cpy = read_file.copy()
-        cv2.imwrite("ohio.png", self.backup_cpy)
 
         cv2.namedWindow(self.file_entries[self.current_file_index], cv2.WINDOW_NORMAL)
         cv2.imshow(self.file_entries[self.current_file_index], read_file)
@@ -54,7 +52,6 @@ class WidgetFunctions:
         try:
             cv2.rectangle(read_file, self.points[0], self.points[1], (0,0,255), 3)
             self.file_being_read = read_file.copy()
-            cv2.imwrite("ohio2.png", self.file_being_read)
         except IndexError:
             pass
 
