@@ -22,9 +22,9 @@ class WidgetFunctions:
         self.current_file_index = 0 # tracks current file being operated on
         self.points = [] # holds the clicked that a rectangle will be drawn over
 
-        self.json_file = 1
-        self.file_being_read = -1 # cv2 matrix
-        self.backup_cpy = -1
+        self.json_file = None
+        self.file_being_read = None # cv2 matrix
+        self.backup_cpy = None
     
     def mouse_event(self, event, x,y, flags, param):
         '''checks for LMB click'''
@@ -64,6 +64,7 @@ class WidgetFunctions:
     def choose_file(self):
         '''Grab all the files in a directory and put them in the scrolledtext as a string'''
         directory_chosen = tkinter.filedialog.askdirectory()
+        self.DATA.curr_folder.set(directory_chosen)
 
         get_last_dir = directory_chosen.split("/")
         self.json_file = f"label_statuses/{get_last_dir[-1]}.json"
