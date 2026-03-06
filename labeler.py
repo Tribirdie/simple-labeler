@@ -7,8 +7,8 @@ from src.shared_data import Comms
 def main():
     med = Comms()
     logic = WidgetFunctions(med)
-    gui_loop = GUI()
-    gui_loop.main(med, logic)
+    gui_loop = GUI(med, logic)
+    gui_loop.main()
 
 if __name__ == "__main__":
     main()
